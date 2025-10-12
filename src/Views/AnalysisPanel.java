@@ -1,4 +1,6 @@
 package Views;
 
-public class AnalysisPanel {
+import javax.swing.*;
+
+public class AnalysisPanel extends JPanel {
 }
