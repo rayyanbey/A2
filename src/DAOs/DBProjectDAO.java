@@ -33,9 +33,10 @@ public class DBProjectDAO implements ProjectDAO {
                 delRes.setInt(1, project.getId());
                 delRes.executeUpdate();
 
-                // Insert updated tasks
+                // Insert updated tasks (use generated keys)
                 PreparedStatement taskPs = conn.prepareStatement(
-                    "INSERT INTO tasks (project_id, name, start_date, end_date, dependencies, resources) VALUES (?, ?, ?, ?, ?, ?)");
+                    "INSERT INTO tasks (id, project_id, name, start_date, end_date, dependencies, resources) VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
                 for (Task t : project.getTasks()) {
                     taskPs.setInt(1, project.getId());
                     taskPs.setString(2, t.getName());
@@ -44,16 +45,27 @@ public class DBProjectDAO implements ProjectDAO {
                     taskPs.setString(5, t.getDependencies());
                     taskPs.setString(6, t.getResources());
                     taskPs.executeUpdate();
+                    try (ResultSet kr = taskPs.getGeneratedKeys()) {
+                        if (kr.next()) {
+                            t.setId(kr.getInt(1));
+                        }
+                    }
                 }
 
                 // Insert updated resources
                 PreparedStatement resPs = conn.prepareStatement(
-                    "INSERT INTO resources (project_id, name, allocation) VALUES (?, ?, ?)");
+                    "INSERT INTO resources (id, project_id, name, allocation) VALUES (DEFAULT, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
                 for (Resource r : project.getResources()) {
                     resPs.setInt(1, project.getId());
                     resPs.setString(2, r.getName());
                     resPs.setDouble(3, r.getAllocation());
                     resPs.executeUpdate();
+                    try (ResultSet kr = resPs.getGeneratedKeys()) {
+                        if (kr.next()) {
+                            r.setId(kr.getInt(1));
+                        }
+                    }
                 }
             } else {
                 // Insert new project
@@ -67,7 +79,8 @@ public class DBProjectDAO implements ProjectDAO {
 
                 // Insert tasks
                 PreparedStatement taskPs = conn.prepareStatement(
-                    "INSERT INTO tasks (project_id, name, start_date, end_date, dependencies, resources) VALUES (?, ?, ?, ?, ?, ?)");
+                    "INSERT INTO tasks (id, project_id, name, start_date, end_date, dependencies, resources) VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
                 for (Task t : project.getTasks()) {
                     taskPs.setInt(1, projectId);
                     taskPs.setString(2, t.getName());
@@ -76,16 +89,27 @@ public class DBProjectDAO implements ProjectDAO {
                     taskPs.setString(5, t.getDependencies());
                     taskPs.setString(6, t.getResources());
                     taskPs.executeUpdate();
+                    try (ResultSet kr = taskPs.getGeneratedKeys()) {
+                        if (kr.next()) {
+                            t.setId(kr.getInt(1));
+                        }
+                    }
                 }
 
                 // Insert resources
                 PreparedStatement resPs = conn.prepareStatement(
-                    "INSERT INTO resources (project_id, name, allocation) VALUES (?, ?, ?)");
+                    "INSERT INTO resources (id, project_id, name, allocation) VALUES (DEFAULT, ?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS);
                 for (Resource r : project.getResources()) {
                     resPs.setInt(1, projectId);
                     resPs.setString(2, r.getName());
                     resPs.setDouble(3, r.getAllocation());
                     resPs.executeUpdate();
+                    try (ResultSet kr = resPs.getGeneratedKeys()) {
+                        if (kr.next()) {
+                            r.setId(kr.getInt(1));
+                        }
+                    }
                 }
 
                 project.setId(projectId);

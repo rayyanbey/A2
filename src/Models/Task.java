@@ -11,6 +11,7 @@ public class Task {
     private String dependencies;
     private String resources;
 
+    public Task() {}
     public Task(int id, int projectId, String name, LocalDate start, LocalDate end, String dependencies, String resources) {
         this.id = id; this.projectId = projectId; this.name = name; this.start = start; this.end = end;
         this.dependencies = dependencies; this.resources = resources;

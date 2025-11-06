@@ -23,9 +23,9 @@ public class DBTaskDAO implements TaskDAO {
                 ps.setInt(7, task.getId());
                 ps.executeUpdate();
             } else {
-                // Insert new task
+                // Insert new task; force DEFAULT for id so DB assigns it
                 PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO tasks (project_id, name, start_date, end_date, dependencies, resources) VALUES (?, ?, ?, ?, ?, ?)",
+                    "INSERT INTO tasks (id, project_id, name, start_date, end_date, dependencies, resources) VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, task.getProjectId());
                 ps.setString(2, task.getName());

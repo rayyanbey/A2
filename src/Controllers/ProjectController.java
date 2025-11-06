@@ -87,9 +87,9 @@ public class ProjectController {
     public void loadProject(int id) throws SQLException {
         Project loaded = dao.load(id);
         if(loaded != null){
-            project.setTitle(loaded.getTitle());
-            project.setId(id);
             project.clear();
+            project.setId(id);
+            project.setTitle(loaded.getTitle());
             project.addAllTasks(loaded.getTasks());
             project.addAllResources(loaded.getResources());
         }
