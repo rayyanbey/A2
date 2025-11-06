@@ -1,18 +1,22 @@
 package Controllers;
 
+import DAOs.ProjectDAO;
 import Models.Project;
 import Models.Resource;
 import Models.Task;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 public class ProjectController {
     private final Project project;
+    private ProjectDAO dao;
 
-    public ProjectController(Project project){
+    public ProjectController(Project project, ProjectDAO dao){
         this.project = project;
+        this.dao = dao;
     }
 
     public Project getProject(){return project;}
@@ -70,5 +74,36 @@ public class ProjectController {
         return map;
     }
 
+    public void saveProject(){
+        try {
+            dao.save(project);
+            System.out.println("Project saved successfully.");
+        } catch (Exception e) {
+            System.err.println("Failed to save project: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
+    public void loadProject(int id) throws SQLException {
+        Project loaded = dao.load(id);
+        if(loaded != null){
+            project.setTitle(loaded.getTitle());
+            project.setId(id);
+            project.clear();
+            project.addAllTasks(loaded.getTasks());
+            project.addAllResources(loaded.getResources());
+        }
+    }
+
+    public void updateProject() throws SQLException {
+        dao.update(project);
+    }
+
+    public void deleteProject(int id) throws SQLException {
+        dao.delete(id);
+    }
+
+    public void setDao(ProjectDAO dao) {
+        this.dao = dao;
+    }
 }

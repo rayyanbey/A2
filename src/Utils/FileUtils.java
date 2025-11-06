@@ -6,7 +6,9 @@ import Models.Task;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -41,7 +43,7 @@ public class FileUtils {
 
                 String deps = parts.length>4?parts[4].trim():"";
                 String res = parts.length>5?parts[5].trim():"";
-                tasks.add(new Task(id, name, s, e, deps, res));
+                tasks.add(new Task(1,id, name, s, e, deps, res));
             }
         }
         return tasks;
